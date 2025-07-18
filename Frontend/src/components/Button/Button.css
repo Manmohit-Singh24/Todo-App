@@ -1,0 +1,32 @@
+.ButtonComponent {
+
+    --bg : rgba(26, 26, 26);
+    --bgHover : rgba(from var(--bg) r g b/ 80%);
+    --bgActive : rgba(from var(--bg) r g b/60%);
+
+    width: 40rem;
+    height: 4rem;
+
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.2rem;
+
+    font : 500 1.4rem ;
+
+    background-color: var(--bg);
+    color: white;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 5px;
+
+    &:hover {
+        background-color: var(--bgHover);
+        box-shadow: rgba(0, 0, 0, 0.24) 1px 1px 5px;
+
+    }
+    &:active,
+    &:focus-visible {
+        background-color: var(--bgActive);
+    }
+
+}
