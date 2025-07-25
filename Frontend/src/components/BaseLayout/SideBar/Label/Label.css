@@ -1,0 +1,37 @@
+.LabelContainer {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 100%;
+    gap: 1rem;
+    border-radius: 0.5rem;
+
+    .LabelTitle {
+        font: var(--Text-1);
+        width: 100%;
+        text-align: left;
+    }
+    .LabelNumber {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font: var(--Text-1);
+        height: 2rem;
+    }
+}
+
+.LabelContainer:hover {
+    background-color: var(--SideBar-Hover);
+}
+
+.LabelSelected , .LabelSelected:hover {
+    background-color: var(--Accent-Bg);
+    *{
+        color: var(--Accent-Color);
+        fill: var(--Accent-Color);
+    }
+
+}

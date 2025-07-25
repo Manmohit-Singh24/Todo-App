@@ -18,7 +18,6 @@
     height: 7rem;
     width: 7rem;
 
-    background: url("../../assets/logo.svg") no-repeat;
     background-size: contain;
 
     position: absolute;
@@ -61,10 +60,6 @@
     }
 }
 
-.GoogleButton {
-    background-image: url("../../assets/google-button.svg");
-    background-size: 100% 100%;
-}
 
 .AuthPageLink {
     font-weight: 500;
@@ -80,6 +75,6 @@
 .AuthPageCheckEmailImage {
     width: 20rem;
     height: 20rem;
-    background: url("../../assets/checkEmail.png") no-repeat;
+    background: url("../assets/icons/checkEmail.png") no-repeat;
     background-size: contain;
 }

@@ -5,8 +5,8 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 /*                 --------***--------                 */
+
 
 @font-face {
     font-family: Numans;
@@ -17,12 +17,3 @@ html {
     font-size: 62.5%; /* 1rem = 10px  */
     scroll-behavior: smooth;
 }
-
-:root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-

@@ -164,13 +164,13 @@ const AuthPage = () => {
 
     return (
         <div className="AuthPageContainer">
-            <div className="AuthPageLogo" />
+            <div className="AuthPageLogo Icon-Logo" />
             <div className="AuthFormContainer">
                 {!isEmailVerifyPage ? (
                     <>
                         <h1 className="AuthPageHeading">{heading}</h1>
                         <Button
-                            className="GoogleButton"
+                            className="Icon-Google-Button"
                             style={{ "--bg": "white" }}
                         />
                         <p>or</p>

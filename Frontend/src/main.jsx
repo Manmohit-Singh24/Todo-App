@@ -4,6 +4,10 @@ import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthPage , HomePage} from "./pages/index.js";
+import "./Themes/Light.css";
+// import "./Themes/Dark.css";
+import "./Themes/Mutual.css";
+import "./utils/Icons.css";
 
 const router = createBrowserRouter([
     {

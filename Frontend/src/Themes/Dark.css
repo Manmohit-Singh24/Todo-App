@@ -1,0 +1,13 @@
+:root {
+    --Primary-Bg : #1E1E1E;
+    --Secondary-Bg : #262626;
+    --Primary-Text : #FFFFFF;
+    --Secondary-Text : #CCCCCC;
+    --Disabled : #808080;
+    --SideBar-Hover : #CA9E5733;
+
+    --Accent-Bg : #DE4C4A33;
+    --TaskBox-P0 : #ADADAD;
+        --TaskBox-P0-BG : rgba(from var(--TaskBox-P0) r g b/ 30%)
+
+}
