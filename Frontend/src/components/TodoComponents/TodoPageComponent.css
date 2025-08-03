@@ -1,0 +1,19 @@
+.TodoPageComponentContainer {
+    width: 100%;
+    height: 100%;
+    max-width: 120rem;
+    
+    display: flex;
+    flex-direction: column;
+    flex-basis: 60rem;
+    padding-inline: 10%;
+    gap: 2rem;
+    align-self: center;
+}
+
+.TodoPageComponentHeading {
+    padding-left: 5.6rem;
+    font: var(--Heading-1);
+    color: var(--Primary-Text);
+}
+

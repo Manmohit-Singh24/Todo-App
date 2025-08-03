@@ -3,11 +3,11 @@
     width: 100vw;
 
     position: relative;
-    font-size: 1.3rem;
 
-    .WrapText {
-        font-size: 1.4rem;
-        width: 30%;
+    p {
+        font: var(--Text-1);
+        color: var(--Primary-Text);
+        width: 40rem;
         text-wrap: wrap;
         text-align: center;
         line-height: 1.5;
@@ -15,10 +15,7 @@
 }
 
 .AuthPageLogo {
-    height: 7rem;
-    width: 7rem;
-
-    background-size: contain;
+    height: 7rem !important;
 
     position: absolute;
     top: 2rem;
@@ -40,10 +37,10 @@
 }
 
 .AuthPageHeading {
-    font: 2.5rem Numans;
+    font: var(--Heading-1);
+    font-size: 3rem;
     text-align: center;
-    color: rgba(0, 0, 0, 0.7);
-
+    width: 40rem;
     &::after {
         display: block;
         content: "";
@@ -60,9 +57,8 @@
     }
 }
 
-
 .AuthPageLink {
-    font-weight: 500;
+    font: var(--Text-1);
     color: rgba(100, 108, 255, 1);
     text-decoration: none;
     cursor: pointer;
@@ -75,6 +71,21 @@
 .AuthPageCheckEmailImage {
     width: 20rem;
     height: 20rem;
-    background: url("../assets/icons/checkEmail.png") no-repeat;
+    background: url("../../assets/Icons/Check-Email.png") no-repeat;
     background-size: contain;
 }
+
+.GoogleButton {
+    width: 100%;
+}
+
+.AuthPageErrorsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .AuthPageError {
+        color: red;
+    }
+}
+ 

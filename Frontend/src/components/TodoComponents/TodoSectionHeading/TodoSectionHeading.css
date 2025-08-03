@@ -1,0 +1,114 @@
+.TodoSectionHeadingContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.TodoSectionHeadingContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    h2 {
+        font: var(--Heading-2);
+        color: var(--Primary-Text);
+    }
+
+    p {
+        font: var(--Text-1);
+        color: var(--Secondary-Text);
+    }
+}
+
+.TodoSectionHeadingLeftIcons,
+.TodoSectionHeadingRightIcons {
+    display: flex;
+
+    button {
+        height: 2.4rem;
+        width: 2.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        background-color: transparent;
+        border: none;
+
+        &:hover {
+            background-color: var(--Hover-BG);
+        }
+    }
+}
+
+.TodoSectionHeadingDragIcon {
+    opacity: 0;
+    transition-duration: 0.2s;
+    cursor: grab;
+    .Icon {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+    svg * {
+        stroke: var(--Disabled);
+        stroke-width: 0.15rem;
+    }
+}
+
+.TodoSectionHeadingVIcon {
+    cursor: pointer;
+
+    .Icon {
+        width: 1.2rem;
+        height: 1.2rem;
+        transform: rotate(-90deg);
+        transition-duration: 0.2s;
+    }
+    svg {
+        fill: var(--Disabled);
+    }
+}
+
+.TodoSectionHeadingMoreIcon {
+    opacity: 0;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    .Icon {
+        width: 1.8rem;
+        transition-duration: 0.2s;
+    }
+    svg {
+        stroke: var(--Disabled);
+        stroke-width: 0.15rem;
+    }
+}
+
+.TodoSectionHeadingBorder {
+    opacity: 0.4;
+    position: absolute;
+    bottom: -50%;
+    left: 5.6rem;
+    width: calc(100% - 5.6rem);
+    height: 0.1rem;
+    background-color: var(--Disabled);
+}
+
+.TodoSectionHeadingContainer:hover {
+    .TodoSectionHeadingDragIcon {
+        opacity: 1;
+    }
+    .TodoSectionHeadingMoreIcon {
+        opacity: 1;
+    }
+    .TodoSectionHeadingBorder {
+        opacity: 1;
+    }
+}
+
+.TodoSectionHeadingContainer.Expanded .TodoSectionHeadingVIcon > .Icon {
+    transform: rotate(0deg);
+}

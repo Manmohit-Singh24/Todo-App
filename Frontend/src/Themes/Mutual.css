@@ -23,10 +23,10 @@
     --Serif-Font: Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif;
     --Sans-Serif-Font: Ubuntu-sans,system-ui, Avenir, Helvetica, Arial, sans-serif;
 
-    --Heading-1: 800 2.4rem var(--Serif-Font);
-    --Heading-2: 700 2.0rem var(--Serif-Font);
-    --Heading-3: 600 1.6rem var(--Serif-Font);
+    --Heading-1: 700 2.4rem var(--Serif-Font);
+    --Heading-2: 600 2.0rem var(--Serif-Font);
+    --Heading-3: 500 1.6rem var(--Serif-Font);
     --Text-1: 500 1.4rem var(--Sans-Serif-Font);
     --Text-2: 400 1.2rem var(--Sans-Serif-Font);
     --Text-3: 300 1.0rem var(--Sans-Serif-Font);
-}
+} 
