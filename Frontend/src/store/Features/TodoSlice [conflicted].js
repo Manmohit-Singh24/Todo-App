@@ -24,11 +24,7 @@ const TodoSlice = createSlice({
         },
 
         updateTodo: (state, action) => {
-            let todoProps = Object.keys(action.payload.todo);
-            
-            for (let todoProp of todoProps) {
-                state.Todos[action.payload.todoId][todoProp] = action.payload.todo[todoProp];
-            }
+            state.Todos[action.payload.todoId] = action.payload.todo;
         },
 
         addTodo: (state, action) => {

@@ -1,4 +1,4 @@
-import { useState, useId, useRef, useEffect } from "react";
+import { useState, useId } from "react";
 import TodoCheckBox from "../TodoCheckBox/TodoCheckBox";
 import "./TodoTaskCard.css";
 import Icon from "../../../utils/Icons";
@@ -85,16 +85,8 @@ const TodoTaskCard = ({
         );
     };
 
-    const datePickerRef = useRef(null);
-
-    useEffect(() => {
-        if (expandDatePicker) {
-            datePickerRef.current.focus();
-        }
-    }, [expandDatePicker]);
-
     return (
-        <div className={cardClassName} id={`P${priority}`}>
+        <div className={cardClassName} id={`P${priority}`} >
             <div className="TodoTaskCardLeftIcons">
                 <button className="TodoTaskCardDragIcon">
                     <Icon name={"IconDrag"} size="XS" />
@@ -139,17 +131,7 @@ const TodoTaskCard = ({
                     </button>
 
                     {expandDatePicker && (
-                        <div
-                            className="TodoTaskCardDatePicker"
-                            ref={datePickerRef}
-                            tabIndex={0}
-                            onBlur={(e) => {
-                                if (!e.currentTarget.contains(e.relatedTarget)) {
-                                    setExpandedDatePicker(false); // only close if clicked outside
-                                    console.log("clicked outside");
-                                }
-                            }}
-                        >
+                        <div className="TodoTaskCardDatePicker" onBlur={() => setExpandedDatePicker(false)}>
                             <TodoDatePicker dueDate={dueDate} setDateValue={dateChange} />
                         </div>
                     )}

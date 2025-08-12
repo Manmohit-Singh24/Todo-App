@@ -16,7 +16,7 @@ import EditProfileForm from "./AuthComponents/EditProfileForm";
 // ------------TodoComponents------------------
 import TodoCheckBox from "./TodoComponents/TodoCheckBox/TodoCheckBox";
 import TodoTaskCard from "./TodoComponents/TodoTaskCard/TodoTaskCard";
-import TodoSectionHeading from "./TodoComponents/TodoSectionHeading/TodoSectionHeading";
+import TodoSection from "./TodoComponents/TodoSection/TodoSection";
 import TodoAddTask from "./TodoComponents/TodoAddTask/TodoAddTask";
 import TodoPageComponent from "./TodoComponents/TodoPageComponent";
 export {
@@ -38,7 +38,7 @@ export {
     // ------------TodoComponents------------------
     TodoCheckBox,
     TodoTaskCard,
-    TodoSectionHeading,
+    TodoSection,
     TodoAddTask,
     TodoPageComponent
 };

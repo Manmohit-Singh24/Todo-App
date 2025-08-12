@@ -71,14 +71,6 @@
             opacity: 1;
         }
     }
-    .SideBarCustomListsHeading.Selected,
-    .SideBarCustomListsHeading.Selected:hover {
-        background-color: var(--Accent-BG);
-        * {
-            color: var(--Accent-Color);
-            fill: var(--Accent-Color);
-        }
-    }
 }
 
 .SideBarExpanded {

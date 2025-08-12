@@ -1,30 +1,17 @@
-import "./SideBarLabel.css";
-import { useId } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedSideBarLabelId } from "../../../../store/Features/SideBarSlice";
-
+import './SideBarLabel.css';
 const SideBarLabel = ({
-    title = "SideBarLabel",
-    icon = "",
-    number = " ",
+    title = 'SideBarLabel',
+    icon = '',
+    number = ' ',
     id,
+    selected = false,
+    onClick = () => {},
 }) => {
-    const dispatch = useDispatch();
 
-    const handleClick = () => {
-        dispatch(setSelectedSideBarLabelId(id));
-    };
-
-    let isSelected = useSelector(
-        (state) => state.SideBarStates.selectedSideBarLabelId === id,
-    );
-
-    let className = `SideBarLabelContainer ${
-        isSelected ? "SideBarLabelSelected" : " "
-    }`;
+    let className = `SideBarLabelContainer ${selected ? 'SideBarLabelSelected' : ' '}`;
 
     return (
-        <button onClick={handleClick} className={className} id={id}>
+        <button onClick={onClick} className={className} id={id}>
             {icon}
             <span className={`SideBarLabelTitle`}>{title}</span>
             {number && <span className="SideBarLabelNumber">{number}</span>}

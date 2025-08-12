@@ -1,6 +1,6 @@
 import "./TodoAddTask.css";
 import Icon from "../../../utils/Icons";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import todoService from "../../../services/TodoServices";
@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import TodoDatePicker from "../TodoDatePicker/TodoDatePicker";
 import { getPrettyDate } from "../../../utils/prettyDate";
 const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
-    const { register, handleSubmit, reset, setFocus, watch } = useForm();
+    const { register, handleSubmit, reset, setFocus } = useForm();
 
     const { pageId } = useParams();
     const dispatch = useDispatch();
@@ -17,11 +17,9 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
     const [dueDate, setDueDate] = useState(pageId === "today" ? new Date() : undefined);
     const [expandedDatePicker, setExpandedDatePicker] = useState(false);
     const [dateIconColor, setDateIconColor] = useState("var(--Disabled)");
-    const datePickerRef = useRef(null);
 
     const [priority, setPriority] = useState(0);
     const [prioritySelectorExpanded, setPrioritySelectorExpanded] = useState(false);
-    const prioritySelectorRef = useRef(null);
 
     const view = useSelector((state) => state.TodoData.View);
     const [addingTask, setAddingTask] = useState(false);
@@ -84,25 +82,10 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
         }
     }, [addingTask]);
 
-    useEffect(() => {
-        if (expandedDatePicker) {
-            datePickerRef.current.focus();
-        }
-    }, [expandedDatePicker]);
-
-    useEffect(() => {
-        if (prioritySelectorExpanded) {
-            prioritySelectorRef.current.focus();
-        }
-    }, [prioritySelectorExpanded]);
-
     const cancelAddingTask = () => {
         setAddingTask(false);
         reset();
         setExpandedDatePicker(false);
-        setPrioritySelectorExpanded(false);
-        setDueDate(pageId === "today" ? new Date() : undefined);
-        setPriority(0);
     };
 
     const expandDatePicker = () => {
@@ -146,17 +129,7 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                             </button>
 
                             {expandedDatePicker && (
-                                <div
-                                    ref={datePickerRef}
-                                    className="TodoAddTaskDatePickerContainer"
-                                    tabIndex={0}
-                                    onBlur={(e) => {
-                                        if (!e.currentTarget.contains(e.relatedTarget)) {
-                                            setExpandedDatePicker(false); // only close if clicked outside
-                                            console.log("clicked outside");
-                                        }
-                                    }}
-                                >
+                                <div className="TodoAddTaskDatePickerContainer" onBlur={() => setExpandedDatePicker(false)}>
                                     <TodoDatePicker dueDate={dueDate} setDateValue={setDueDate} />
                                 </div>
                             )}
@@ -171,17 +144,7 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                             </button>
 
                             {prioritySelectorExpanded && (
-                                <div
-                                    className="TodoAddTaskPrioritySelectorContainer"
-                                    tabIndex={0}
-                                    ref={prioritySelectorRef}
-                                    onBlur={(e) => {
-                                        if (!e.currentTarget.contains(e.relatedTarget)) {
-                                            setPrioritySelectorExpanded(false); // only close if clicked outside
-                                            console.log("clicked outside");
-                                        }
-                                    }}
-                                >
+                                <div className="TodoAddTaskPrioritySelectorContainer">
                                     <button
                                         id="P0Flag"
                                         type="button"

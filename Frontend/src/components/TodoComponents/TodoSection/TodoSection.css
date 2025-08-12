@@ -1,3 +1,9 @@
+.TodoSectionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 .TodoSectionHeadingContainer {
     display: flex;
     flex-direction: row;
@@ -65,7 +71,6 @@
     .Icon {
         width: 1.2rem;
         height: 1.2rem;
-        transform: rotate(-90deg);
         transition-duration: 0.2s;
     }
     svg {
@@ -90,9 +95,7 @@
 .TodoSectionHeadingBorder {
     opacity: 0.4;
     position: absolute;
-    bottom: -50%;
-    left: 5.6rem;
-    width: calc(100% - 5.6rem);
+    bottom: -20%;
     height: 0.1rem;
     background-color: var(--Disabled);
 }
@@ -109,6 +112,48 @@
     }
 }
 
-.TodoSectionHeadingContainer.Expanded .TodoSectionHeadingVIcon > .Icon {
-    transform: rotate(0deg);
+.TodoSectionContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 1000rem;
+    transition-duration: 0.3s;
+}
+
+.TodoSectionTodos {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.TodoSectionContainer.ListView {
+    width: 100%;
+
+    .TodoSectionHeadingBorder {
+        left: 5.6rem;
+        width: calc(100% - 5.6rem);
+    }
+}
+
+.TodoSectionContainer.BoardView {
+    width: 35.6rem;
+    flex-shrink: 0;
+
+    .TodoSectionHeadingBorder {
+        left: 3rem;
+        width: 30rem;
+    }
+}
+
+.TodoSectionContainer.Collapsed {
+    overflow: hidden;
+    
+    & .TodoSectionHeadingVIcon > .Icon {
+        transform: rotate(-90deg);
+    }
+
+    & > .TodoSectionContent {
+        overflow: hidden;
+        max-height: 0;
+    }
 }

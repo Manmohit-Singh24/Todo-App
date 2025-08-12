@@ -3,98 +3,96 @@ import Icon from "../../../utils/Icons";
 import SideBarHeader from "./SideBarHeader/SideBarHeader";
 import SideBarLabel from "./SideBarLabel/SideBarLabel";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSelectedSideBarLabelId } from "../../../store/Features/SideBarSlice";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-const SideBar = ({
-    SideBarDefaultLabels = [],
-    SideBarCustomLists = { Heading: "Heading", HeadingId, Lists: [] },
-}) => {
-    const dispatch = useDispatch();
-    const handleClick = () =>
-      dispatch(setSelectedSideBarLabelId(SideBarCustomLists["HeadingId"]));
+const SideBar = () => {
+    const navigate = useNavigate();
+    const { pageType, pageId } = useParams();
 
-    let isSelected = useSelector(
-        (state) =>
-            state.SideBarStates.selectedSideBarLabelId ===
-            SideBarCustomLists["HeadingId"],
-    );
-
-    const isSideBarExpanded = useSelector(
-        (state) => state.SideBarStates.sideBarExpanded,
-    );
-
-    let CustomListsHeadingClassName = `SideBarCustomListsHeading ${
-        isSelected ? "Selected" : ""
-    }`;
-
-    let sideBarClassName = `SideBarContainer ${
-        isSideBarExpanded ? "SideBarExpanded" : "SideBarCollapsed"
-    }`;
-
+    const [isSideBarExpanded, setIsSideBarExpanded] = useState(true);
     const [isCustomListsExpanded, setIsCustomListsExpanded] = useState(true);
 
-    const toogleCustomListsDsiplay = () =>
-        setIsCustomListsExpanded(!isCustomListsExpanded);
+    const handleClick = (labelId) =>
+        navigate(pageType === "notes" ? `app/notes/${labelId}` : `/app/todo/${labelId}`);
 
-    SideBarDefaultLabels = SideBarDefaultLabels.map((item) => (
+    const SideBarDefaultLabels = (
+        pageType === "notes"
+            ? []
+            : [
+                  { title: "Today", icon: "IconCalendarToday", id: "today" }, // Later we will retrieve id from backend , id will help to organise tasks easily among labels
+                  { title: "Inbox", icon: "IconInbox", id: "inbox" },
+                  { title: "Upcoming", icon: "IconCalendar1", id: "upcoming" },
+              ]
+    ).map((item) => (
         <SideBarLabel
             title={item.title}
             icon={<Icon name={item.icon} size={"M"} />}
             id={item.id}
-            number={item.number}
+            number={item.number || ""}
             key={item.id}
+            selected={item.id === pageId}
+            onClick={() => handleClick(item.id)}
         />
     ));
 
+    const Tags = pageType === "notes" ? [] : useSelector((state) => state.TodoData.Tags);
 
-    let customLists = SideBarCustomLists["Lists"].map((item) => (
-        <SideBarLabel
-            title={item.title}
-            icon={<Icon name={item.icon} size={"M"} />}
-            id={item.id}
-            number={item.number}
-            key={item.id}
-        />
-    ));
+    const SideBarCustomLists = Object.keys(Tags).map(
+        (labelId) =>
+            labelId !== "inbox" && (
+                <SideBarLabel
+                    title={Tags[labelId]?.title}
+                    icon={<Icon name={"IconList2"} size={"M"} />}
+                    id={labelId}
+                    number={Tags[labelId]?.number || ""}
+                    key={labelId}
+                    selected={labelId === pageId}
+                    onClick={() => handleClick(labelId)}
+                />
+            ),
+    );
+
+    let Heading = pageType === "notes" ? "My NoteBooks" : "My Projects";
 
     return (
-        <div className={sideBarClassName}>
+        <div
+            className={`SideBarContainer ${
+                isSideBarExpanded ? "SideBarExpanded" : "SideBarCollapsed"
+            }`}
+        >
             <nav className="SideBarNav">
-                <SideBarHeader />
-                <div className="SideBarDefaultLabels">
-                    {SideBarDefaultLabels}
-                </div>
+                {/* --------------------- SideBarHeader --------------------- */}
+                <SideBarHeader toogleExpansion={() => setIsSideBarExpanded(!isSideBarExpanded)} />
 
-                <div className={CustomListsHeadingClassName}>
-                    <button onClick={handleClick}>
-                        {SideBarCustomLists["Heading"]}{" "}
-                    </button>
+                {/* --------------------- SideBarDefaultLabels --------------------- */}
+                <div className="SideBarDefaultLabels">{SideBarDefaultLabels}</div>
+
+                {/* --------------------- SideBarCustomListsHeading --------------------- */}
+                <div className="SideBarCustomListsHeading">
+                    <button>{Heading}</button>
+
                     <div className="SideBarCustomListsHeadingIcons">
                         <button>
                             <Icon name={"IconPlus"} size={"XS"} />
                         </button>
+
                         <button
-                            className={
-                                !isCustomListsExpanded
-                                    ? "SideBarCustomListsCollapsed"
-                                    : ""
-                            }
-                            onClick={toogleCustomListsDsiplay}
+                            className={isCustomListsExpanded ? "" : "SideBarCustomListsCollapsed"}
+                            onClick={() => setIsCustomListsExpanded(!isCustomListsExpanded)}
                         >
                             <Icon name={"IconV"} size={"XS"} />
                         </button>
                     </div>
                 </div>
 
+                {/* --------------------- SideBarCustomLists --------------------- */}
                 <div
                     className={`SideBarCustomLists ${
-                        !isCustomListsExpanded
-                            ? "SideBarCustomListsCollapsed"
-                            : ""
+                        isCustomListsExpanded ? "" : "SideBarCustomListsCollapsed"
                     }`}
                 >
-                    {customLists}
+                    {SideBarCustomLists}
                 </div>
             </nav>
         </div>

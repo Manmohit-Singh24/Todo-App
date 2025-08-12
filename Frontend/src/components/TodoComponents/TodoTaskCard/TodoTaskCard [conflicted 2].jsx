@@ -1,4 +1,4 @@
-import { useState, useId, useRef, useEffect } from "react";
+import { useState, useId } from "react";
 import TodoCheckBox from "../TodoCheckBox/TodoCheckBox";
 import "./TodoTaskCard.css";
 import Icon from "../../../utils/Icons";
@@ -6,7 +6,7 @@ import { getPrettyDate } from "../../../utils/prettyDate";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import todoService from "../../../services/TodoServices";
-import { toogleTodoCompleted, updateTodo } from "../../../store/Features/TodoSlice";
+import { toogleTodoCompleted , updateTodo } from "../../../store/Features/TodoSlice";
 import TodoDatePicker from "../TodoDatePicker/TodoDatePicker";
 const TodoTaskCard = ({
     id = useId(),
@@ -77,21 +77,14 @@ const TodoTaskCard = ({
     };
 
     const dateChange = (date) => {
+        console.log(date);
         dispatch(
             updateTodo({
                 todoId: id,
-                todo: { dueDate: date.toISOString() },
+                dueDate: date,
             }),
         );
     };
-
-    const datePickerRef = useRef(null);
-
-    useEffect(() => {
-        if (expandDatePicker) {
-            datePickerRef.current.focus();
-        }
-    }, [expandDatePicker]);
 
     return (
         <div className={cardClassName} id={`P${priority}`}>
@@ -139,17 +132,7 @@ const TodoTaskCard = ({
                     </button>
 
                     {expandDatePicker && (
-                        <div
-                            className="TodoTaskCardDatePicker"
-                            ref={datePickerRef}
-                            tabIndex={0}
-                            onBlur={(e) => {
-                                if (!e.currentTarget.contains(e.relatedTarget)) {
-                                    setExpandedDatePicker(false); // only close if clicked outside
-                                    console.log("clicked outside");
-                                }
-                            }}
-                        >
+                        <div className="TodoTaskCardDatePicker">
                             <TodoDatePicker dueDate={dueDate} setDateValue={dateChange} />
                         </div>
                     )}

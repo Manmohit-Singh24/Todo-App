@@ -63,8 +63,9 @@
     }
 }
 
-.TodoTaskCardTaskSubTaskContainer {
+.TodoTaskCardTaskAndSubTaskContainer {
     width: 100%;
+    position: relative;
 }
 
 .TodoTaskCardContainer {
@@ -75,10 +76,11 @@
 .TodoTaskCardTask {
     font: var(--Text-1);
     color: var(--Primary-Text);
-    text-wrap: wrap;
+    text-wrap: nowrap;
     line-height: 1.5rem;
     overflow: hidden;
     max-height: 1.5rem;
+    text-overflow: ellipsis;
 }
 
 .TodoTaskCardDescription {
@@ -86,8 +88,12 @@
     color: var(--Secondary-Text);
     text-wrap: wrap;
     line-height: 1.5rem;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2; /* ✅ number of lines to show*/
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    max-height: 3rem;
+    text-overflow: ellipsis;
 }
 
 .TodoTaskCardDueDate,
@@ -113,6 +119,7 @@
 }
 
 .TodoTaskCardDueDate {
+    position: relative;
     * {
         fill: var(--fill);
         color: var(--fill);
@@ -131,11 +138,19 @@
     &:hover {
         background-color: var(--Hover-BG);
     }
-    text-wrap: wrap;
-    line-height: 1.5rem;
-    overflow: hidden;
-    max-height: 2rem;
-    max-width: 10rem;
+    white-space: nowrap;
+    /* max-width: 5rem; */
+    span {
+        max-width: 7.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.TodoTaskCardDatePicker {
+    position: absolute;
+    z-index: 9999;
 }
 
 .TodoTaskCard.BoardView {
@@ -151,7 +166,7 @@
     .TodoTaskCardContainer {
         width: 30rem;
         display: grid;
-        grid-template-rows: minmax(2rem, auto) minmax(1.6rem, auto) auto;
+        grid-template-rows: minmax(2rem, auto) auto auto;
         grid-template-columns: 2.5rem min-content min-content auto;
         align-items: center;
         border: 0.05rem solid;
@@ -159,11 +174,13 @@
         padding: 1rem 2rem;
 
         .TodoTaskCardTask {
+            max-width: 24.5rem;
             grid-row: 1/2;
             grid-column: 2/5;
         }
 
         .TodoTaskCardDescription {
+            max-width: 24.5rem;
             grid-row: 2/3;
             grid-column: 2/5;
         }
@@ -186,6 +203,13 @@
             grid-column: 4/5;
         }
     }
+
+    .TodoTaskCardDatePicker {
+        top: 90%;
+        left: 5rem;
+        box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+    }
 }
 
 .TodoTaskCard.ListView {
@@ -204,18 +228,22 @@
     .TodoTaskCardContainer {
         display: grid;
         grid-template-rows: max-content minmax(1.6rem, auto) auto;
-        grid-template-columns: 2.5rem auto min-content;
+        grid-template-columns: 2.5rem auto max-content;
         align-items: center;
         border-bottom: 0.05rem solid;
         padding-block: 0.5rem;
     }
 
     .TodoTaskCardTask {
+        max-width: 96%;
+
         grid-row: 1/2;
         grid-column: 2/3;
     }
 
     .TodoTaskCardDescription {
+        max-width: 96%;
+
         grid-row: 2/3;
         grid-column: 2/3;
     }
@@ -250,7 +278,7 @@
 }
 
 #P0 {
-    > .TodoTaskCardTaskSubTaskContainer > .TodoTaskCardContainer {
+    > .TodoTaskCardTaskAndSubTaskContainer > .TodoTaskCardContainer {
         color: var(--TaskBox-P0);
         border-color: var(--TaskBox-P0-BG);
 
@@ -261,7 +289,7 @@
 }
 
 #P1 {
-    > .TodoTaskCardTaskSubTaskContainer > .TodoTaskCardContainer {
+    > .TodoTaskCardTaskAndSubTaskContainer > .TodoTaskCardContainer {
         color: var(--TaskBox-P1-BG);
         border-color: var(--TaskBox-P1-BG);
 
@@ -272,7 +300,7 @@
 }
 
 #P2 {
-    > .TodoTaskCardTaskSubTaskContainer > .TodoTaskCardContainer {
+    > .TodoTaskCardTaskAndSubTaskContainer > .TodoTaskCardContainer {
         color: var(--TaskBox-P2);
         border-color: var(--TaskBox-P2-BG);
 
@@ -283,7 +311,7 @@
 }
 
 #P3 {
-    > .TodoTaskCardTaskSubTaskContainer > .TodoTaskCardContainer {
+    > .TodoTaskCardTaskAndSubTaskContainer > .TodoTaskCardContainer {
         color: var(--TaskBox-P3);
         border-color: var(--TaskBox-P3-BG);
 

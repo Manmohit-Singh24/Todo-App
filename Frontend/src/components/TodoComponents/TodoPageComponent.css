@@ -2,13 +2,20 @@
     width: 100%;
     height: 100%;
     max-width: 120rem;
-    
+
     display: flex;
     flex-direction: column;
-    flex-basis: 60rem;
     padding-inline: 10%;
     gap: 2rem;
     align-self: center;
+
+    &.ListView {
+        padding-inline: 10%;
+    }
+
+    &.BoardView {
+        padding-inline: 0;
+    }
 }
 
 .TodoPageComponentHeading {
@@ -17,3 +24,20 @@
     color: var(--Primary-Text);
 }
 
+.TodoPageComponentSectionsContainer {
+    display: flex;
+    gap: 1rem;
+
+    &.ListView {
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+    }
+
+    &.BoardView {
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
+    }
+}

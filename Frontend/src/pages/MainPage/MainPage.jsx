@@ -1,46 +1,40 @@
-import "./MainPage.css";
-import { useId } from "react";
-import { SideBar, TodoPageComponent } from "../../components";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setSelectedSideBarLabelId } from "../../store/Features/SideBarSlice";
+import './MainPage.css';
+import { SideBar, TodoPageComponent } from '../../components';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTodoTags, setTodos } from '../../store/Features/TodoSlice';
+import todoService from '../../services/TodoServices';
+import { useEffect, useState } from 'react';
 const MainPage = () => {
-    const { pageType, pageId } = useParams();
+    const { pageType } = useParams();
     const dispatch = useDispatch();
-    let SideBarDefaultLabels, SideBarCustomLists, pageContainer;
+    const [pageContainer, setPageContainer] = useState(<></>);
 
-    dispatch(setSelectedSideBarLabelId(pageId));
+    let email = useSelector((state) => state.AuthData.Email);
+    let token = useSelector((state) => state.AuthData.Token);
 
-    if (pageType === "notes") {
-        // nothing yet
-    } else {
-        SideBarDefaultLabels = [
-            { title: "Today", icon: "IconCalendarToday", id: "today" }, // Later we will retrieve id from backend , id will help to organise tasks easily among labels
-            { title: "Inbox", icon: "IconInbox", id: "inbox" },
-            { title: "Upcoming", icon: "IconCalendar1", id: "upcoming" },
-        ];
+    useEffect(() => {
+        (async () => {
+            if (pageType === 'todo') {
+                const { message, success, data } = await todoService.fetchTodos({
+                    email,
+                    token,
+                });
 
-        SideBarCustomLists = {
-            Heading: "My Projects",
-            HeadingId: useId(),
-            Lists: [
-                { title: "Getting Started", icon: "IconList2", id: useId() },
-            ],
-        };
-
-        pageContainer = <TodoPageComponent />;
-    }
+                if (success) {                    
+                    dispatch(setTodos({ Todos: data.todos }));
+                    dispatch(setTodoTags({ Tags: data.tags }));
+                    setPageContainer(<TodoPageComponent />);
+                }
+            }
+            
+        })();
+    }, [pageType, email, token]);
 
     return (
         <div className="MainPage">
-            <SideBar
-                SideBarDefaultLabels={SideBarDefaultLabels}
-                SideBarCustomLists={SideBarCustomLists}
-            />
-
-            <div className="MainPageContainer">
-                {pageContainer}
-            </div>
+            <SideBar />
+            <div className="MainPageContainer">{pageContainer}</div>
         </div>
     );
 };
