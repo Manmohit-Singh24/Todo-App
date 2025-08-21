@@ -16,13 +16,28 @@ class Todo {
                 tags: {
                     inbox: {
                         title: "Inbox",
-                        sections: ["Not Sectioned", "Section-1"],
-                        number: 1,
                     },
-                    GetStarted1234: {
+                    "Get-Started1234": {
                         title: "Get Started",
-                        sections: ["Not Sectioned", "Section-1"],
-                        number: 0,
+                        tagColor: "default",
+                        order: 1,
+                    },
+                },
+                sections: {
+                    "NotSectioned-inbox": {
+                        sectionName: "Not Sectioned",
+                        tagId: "inbox",
+                        order: -Infinity,
+                    },
+                    "NotSectioned-Get-Started1234": {
+                        sectionName: "Not Sectioned",
+                        tagId: "Get-Started1234",
+                        order: -Infinity,
+                    },
+                    "Section1-1234": {
+                        sectionName: "Section 1",
+                        tagId: "Get-Started1234",
+                        order: 3,
                     },
                 },
                 todos: {
@@ -30,57 +45,80 @@ class Todo {
                         task: "This a sample task I am adding to check if turnicate at end and not spread more than 1 lines",
                         description:
                             "This is a sample Discription I am adding to check if it clamp to 2 lines and turnicate at end. I think this was not enough , i need to write more to check it out ",
-                        priority: 0,
+                        priority: 4,
                         dueDate: new Date("2027-08-08").toISOString(),
-                        subTasks: [],
-                        tagId: "inbox", // default "inbox"
-                        sectionName: "Section-1",
-                        completed: false,
+                        sectionId: "NotSectioned-inbox",
+                        completed: true,
+                        order: 1,
                     },
                     t2: {
-                        task: "Second Task",
+                        task: "Task for '5/5/2025' ",
                         description: "",
-                        priority: 0,
+                        priority: 4,
                         dueDate: new Date("2025-05-05").toISOString(),
-                        subTasks: [],
-                        tagId: "inbox", // default "inbox"
-                        sectionName: "Not Sectioned",
-                        completed: true,
+                        sectionId: "NotSectioned-inbox",
+                        completed: false,
+                        order: 2,
                     },
                     t3: {
-                        task: "Today Task",
-                        description: "",
-                        priority: 0,
+                        task: "Today's Task",
+                        description: "This is the Today's Task",
+                        priority: 4,
                         dueDate: new Date().toISOString(),
-                        subTasks: [],
-                        tagId: "inbox", // default "inbox"
-                        sectionName: "Section-1",
+                        sectionId: "Section1-1234",
                         completed: false,
+                        order: 3,
                     },
                     t4: {
-                        task: "Tdoay 2 Task",
-                        description: "There we go",
+                        task: "The parent tag 't4' ",
+                        description: "",
                         priority: 1,
                         dueDate: new Date("2025-10-05").toISOString(),
-                        subTasks: {
-                            st1: {
-                                task: "Default Subtask",
-                                description: "Default Subtask Description",
-                                priority: 0,
-                                subTasks: [],
-                                completed: false,
-                            },
-                            st2: {
-                                task: "Default Subtask",
-                                description: "Default Subtask Description",
-                                priority: 0,
-                                subTasks: [],
-                                completed: true,
-                            },
-                        },
-                        tagId: "GetStarted1234", // default "inbox"
-                        sectionName: "Section-1",
+                        sectionId: "Section1-1234",
                         completed: false,
+                        isSubTask: false,
+                        order: 4,
+                    },
+                    st1: {
+                        task: "Subtask",
+                        description: "",
+                        priority: 4,
+                        completed: false,
+                        isSubTask: true,
+                        parentTodoId: "t4",
+                        subTaskDepth: 1,
+                        order: 5,
+                    },
+                    sst1: {
+                        task: "Sub-SubTask",
+                        description: "",
+                        priority: 4,
+                        completed: false,
+                        isSubTask: true,
+                        parentTodoId: "st1",
+                        subTaskDepth: 2,
+                        order: 6,
+                    },
+                    ssst1: {
+                        task: "Sub-Sub-SubTask",
+                        description: "",
+                        priority: 4,
+                        completed: false,
+                        isSubTask: true,
+                        parentTodoId: "sst1",
+                        subTaskDepth: 3,
+                        order: 7,
+                    },
+                    sssst1: {
+                        task: "Sub-Sub-Sub-SubTask",
+                        description:
+                            "This is at depth four , it is the last level for having Subtasks",
+                        priority: 4,
+                        completed: false,
+                        isSubTask: true,
+                        parentTodoId: "ssst1",
+                        subTaskDepth: 4,
+                        order: 8,
                     },
                 },
             },
@@ -96,7 +134,7 @@ class Todo {
             message: "SuccessFully added todo",
             success: true,
             data: {},
-        }
+        };
         return res;
     };
 
@@ -105,7 +143,7 @@ class Todo {
         return res;
     };
 
-    updateTodo = async ({ email, token, todoId , newData}) => {
+    updateTodo = async ({ email, token, todoId, newData }) => {
         let res = { message: "Failed to make request", success: false, data: {} };
         return res;
     };
@@ -117,7 +155,7 @@ class Todo {
             message: "SuccessFully updated todo",
             success: true,
             data: {},
-        }
+        };
         return res;
     };
 }

@@ -33,7 +33,7 @@ export default function TodoDatePicker({dueDate ,  setDateValue }) {
     }, [value]);
 
     return (
-        <div className="TodoDatePickerContainer">
+        <div className="TodoDatePickerContainer" onClick={(e) => e.stopPropagation()}>
             <div className="TodoDatePickerTopButtons">
                 <button
                     className="TodoDatePickerTodayButton"

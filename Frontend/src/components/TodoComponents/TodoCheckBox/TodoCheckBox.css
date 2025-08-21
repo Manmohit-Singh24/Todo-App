@@ -7,43 +7,16 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-
-    *{
+    * {
         width: 0.9rem;
         height: 0.9rem;
     }
 
-    &.P0 {
-        color: var(--TaskBox-P0);
-        border: solid 0.2rem var(--TaskBox-P0);
-        * {
-            fill: none;
-        }
-
-        &:hover {
-            * {
-                fill: var(--TaskBox-P0);
-            }
-        }
-
-        &.Checked {
-            border: none;
-            background-color: var(--TaskBox-P0-BG);
-            * {
-                fill: var(--Primary-BG);
-            }
-
-            &:hover {
-                border: solid 0.2rem var(--TaskBox-P0);
-            }
-        }
-    }
- 
     &.P1 {
         color: var(--TaskBox-P1);
         border: solid 0.2rem var(--TaskBox-P1);
         * {
-            fill: none; 
+            fill: none;
         }
 
         &:hover {
@@ -59,6 +32,17 @@
                 fill: var(--Primary-BG);
             }
 
+            &:hover {
+                border: solid 0.2rem var(--TaskBox-P1);
+            }
+        }
+
+        &.Disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            * {
+                fill: var(--Primary-BG);
+            }
             &:hover {
                 border: solid 0.2rem var(--TaskBox-P1);
             }
@@ -113,6 +97,32 @@
 
             &:hover {
                 border: solid 0.2rem var(--TaskBox-P3);
+            }
+        }
+    }
+
+        &.P4 {
+        color: var(--TaskBox-P4);
+        border: solid 0.2rem var(--TaskBox-P4);
+        * {
+            fill: none;
+        }
+
+        &:hover {
+            * {
+                fill: var(--TaskBox-P4);
+            }
+        }
+
+        &.Checked {
+            border: none;
+            background-color: var(--TaskBox-P4-BG);
+            * {
+                fill: var(--Primary-BG);
+            }
+
+            &:hover {
+                border: solid 0.2rem var(--TaskBox-P4);
             }
         }
     }

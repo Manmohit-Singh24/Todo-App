@@ -4,6 +4,7 @@ import Input from "./FormComponents/Input/Input";
 import Button from "./FormComponents/Button/Button";
 import FileUpload from "./FormComponents/FileUpload/FileUpload";
 // -----------MainPageComponents-----------------------
+import ConfirmDeleteAlert from "./MainPageComponents/ConfirmDeleteAlert/ConfirmDeleteAlert";
 import SideBar from "./MainPageComponents/SideBar/SideBar";
 import SideBarHeader from "./MainPageComponents/SideBar/SideBarHeader/SideBarHeader";
 import SideBarLabel from "./MainPageComponents/SideBar/SideBarLabel/SideBarLabel";
@@ -26,6 +27,7 @@ export {
     Button,
     FileUpload,
     // -----------MainPageComponents-----------------------
+    ConfirmDeleteAlert,
     SideBar,
     SideBarHeader,
     SideBarLabel,

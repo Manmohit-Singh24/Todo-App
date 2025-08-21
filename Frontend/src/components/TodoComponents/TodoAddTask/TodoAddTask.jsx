@@ -4,74 +4,86 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import todoService from "../../../services/TodoServices";
-import { addTodo } from "../../../store/Features/TodoSlice";
+import { addTodo, setEditingTaskId, addSubTask } from "../../../store/Features/TodoSlice";
 import { useParams } from "react-router-dom";
 import TodoDatePicker from "../TodoDatePicker/TodoDatePicker";
 import { getPrettyDate } from "../../../utils/prettyDate";
-const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
-    const { register, handleSubmit, reset, setFocus, watch } = useForm();
-
-    const { pageId } = useParams();
+const TodoAddTask = ({
+    isForSubTask = false,
+    sectionId = "NotSectioned",
+    view = undefined,
+    parentTaskId = undefined,
+}) => {
     const dispatch = useDispatch();
 
-    const [dueDate, setDueDate] = useState(pageId === "today" ? new Date() : undefined);
+    const { register, handleSubmit, reset, setFocus, watch } = useForm();
+
+    const isToday = sectionId === "Today";
+
+    const [dueDate, setDueDate] = useState(isToday ? new Date() : undefined);
     const [expandedDatePicker, setExpandedDatePicker] = useState(false);
     const [dateIconColor, setDateIconColor] = useState("var(--Disabled)");
     const datePickerRef = useRef(null);
 
-    const [priority, setPriority] = useState(0);
+    const [priority, setPriority] = useState(4);
     const [prioritySelectorExpanded, setPrioritySelectorExpanded] = useState(false);
     const prioritySelectorRef = useRef(null);
 
-    const view = useSelector((state) => state.TodoData.View);
     const [addingTask, setAddingTask] = useState(false);
-
-    const contianerClassName = `TodoAddTaskContainer ${addingTask ? "AddingTask" : ""} ${view}View`;
 
     const email = useSelector((state) => state.AuthData.Email);
     const token = useSelector((state) => state.AuthData.Token);
+    const title = isForSubTask ? "Add SubTask" : "Add Task";
+    view = view || useSelector((state) => state.TodoData.View);
+    sectionId = isToday ? "NotSectioned-inbox" : sectionId;
 
-    const addTaskClick = async (formData) => {
+    const contianerClassName = `TodoAddTaskContainer ${addingTask ? "AddingTask" : ""} ${view}View`;
+
+    const addTaskClick = async (formData, e) => {
+        const buttonName = e.nativeEvent.submitter.name; // which button was clicked
+
+        let todoId = `t${
+            String.fromCharCode(Math.floor(Math.random() * 26) + 97) + Math.floor(Math.random() * 9)
+        }`;
+
         if (!addingTask) {
             setFocus("task");
             setAddingTask(true);
-        } else if (addingTask && !formData.task) {
-            cancelAddingTask();
-        } else {
-            let todoId = `t ${
-                String.fromCharCode(Math.floor(Math.random() * 26) + 97) +
-                Math.floor(Math.random() * 9)
-            }`;
-
-            const { message, success /* data */ } = await todoService.addTodo({
-                email,
-                token,
-                todo: {
-                    task: formData.task,
-                    description: formData.description,
-                    priority: priority,
-                    dueDate: dueDate,
-                    tagId: pageId,
-                    sectionName: sectionName,
-                },
-            });
-
+        } else if (buttonName === "more" || (addingTask && formData.task)) {
             let data = {
                 task: formData.task,
                 description: formData.description,
                 priority: priority,
-                dueDate: dueDate.toISOString(),
-                tagId: pageId,
-                sectionName: sectionName,
+                dueDate: dueDate?.toString(),
+                sectionId: sectionId,
                 completed: false,
-                subtasks: {},
+                subTasks: {},
             };
 
+            const { message, success /* data */ } = await todoService.addTodo({
+                email,
+                token,
+                todo: data,
+            });
+
             if (success) {
-                dispatch(addTodo({ todoId, todo: data }));
+                if (isForSubTask) dispatch(addSubTask({ parentTaskId, todoId, todo: data }));
+                else dispatch(addTodo({ todoId, todo: data }));
+
+                if (buttonName === "more") {
+                    dispatch(setEditingTaskId({ todoId: todoId }));
+                }
                 cancelAddingTask();
             }
         }
+    };
+    const cancelAddingTask = () => {
+        setAddingTask(false);
+        reset();
+        setExpandedDatePicker(false);
+        setPrioritySelectorExpanded(false);
+        setDueDate(isToday ? new Date() : undefined);
+        setPriority(4);
     };
 
     useEffect(() => {
@@ -96,24 +108,24 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
         }
     }, [prioritySelectorExpanded]);
 
-    const cancelAddingTask = () => {
-        setAddingTask(false);
-        reset();
-        setExpandedDatePicker(false);
-        setPrioritySelectorExpanded(false);
-        setDueDate(pageId === "today" ? new Date() : undefined);
-        setPriority(0);
-    };
+    useEffect(() => {
+        const dropdowns = [
+            { ref: datePickerRef, close: () => setExpandedDatePicker(false) },
+            { ref: prioritySelectorRef, close: () => setPrioritySelectorExpanded(false) },
+        ];
 
-    const expandDatePicker = () => {
-        setExpandedDatePicker(!expandedDatePicker);
-        setPrioritySelectorExpanded(false);
-    };
+        const handleClickOutside = (e) => {
+            dropdowns.forEach(({ ref, close }) => {
+                if (ref.current && !ref.current.contains(e.target)) {
+                    close();
+                }
+            });
+        };
 
-    const expandPrioritySelector = () => {
-        setPrioritySelectorExpanded(!prioritySelectorExpanded);
-        setExpandedDatePicker(false);
-    };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
 
     return (
         <form className={contianerClassName} onSubmit={handleSubmit(addTaskClick)}>
@@ -121,17 +133,27 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                 <>
                     <div className="TodoAddTaskContentContainer">
                         <div className="TodoAddTaskInputContainer">
-                            <input
-                                type="text"
+                            <textarea
                                 className="TodoAddTaskTitleInput"
+                                rows={1}
                                 placeholder="Task..."
-                                {...register("task")}
+                                {...register("task", {
+                                    onChange: (e) => {
+                                        e.target.style.height = "auto"; // reset to shrink if needed
+                                        e.target.style.height = `${e.target.scrollHeight}px`; // set to fit
+                                    },
+                                })}
                             />
-                            <input
-                                type="text"
+                            <textarea
                                 className="TodoAddTaskDescriptionInput"
+                                rows={1}
                                 placeholder="Description..."
-                                {...register("description")}
+                                {...register("description", {
+                                    onChange: (e) => {
+                                        e.target.style.height = "auto"; // reset to shrink if needed
+                                        e.target.style.height = `${e.target.scrollHeight}px`; // set to fit
+                                    },
+                                })}
                             />
                         </div>
 
@@ -139,24 +161,14 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                             <button
                                 type="button"
                                 className="TodoAddTaskDateButton"
-                                onClick={expandDatePicker}
+                                onClick={() => setExpandedDatePicker(!expandedDatePicker)}
                                 style={{ "--IconColor": dateIconColor }}
                             >
                                 <Icon name={"IconCalendar2"} />
                             </button>
 
                             {expandedDatePicker && (
-                                <div
-                                    ref={datePickerRef}
-                                    className="TodoAddTaskDatePickerContainer"
-                                    tabIndex={0}
-                                    onBlur={(e) => {
-                                        if (!e.currentTarget.contains(e.relatedTarget)) {
-                                            setExpandedDatePicker(false); // only close if clicked outside
-                                            console.log("clicked outside");
-                                        }
-                                    }}
-                                >
+                                <div ref={datePickerRef} className="TodoAddTaskDatePickerContainer">
                                     <TodoDatePicker dueDate={dueDate} setDateValue={setDueDate} />
                                 </div>
                             )}
@@ -165,7 +177,9 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                                 type="button"
                                 className="TodoAddTaskPriorityButton"
                                 id={`P${priority}Flag`}
-                                onClick={expandPrioritySelector}
+                                onClick={() =>
+                                    setPrioritySelectorExpanded(!prioritySelectorExpanded)
+                                }
                             >
                                 <Icon name={"IconFlag"} />
                             </button>
@@ -173,23 +187,8 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                             {prioritySelectorExpanded && (
                                 <div
                                     className="TodoAddTaskPrioritySelectorContainer"
-                                    tabIndex={0}
                                     ref={prioritySelectorRef}
-                                    onBlur={(e) => {
-                                        if (!e.currentTarget.contains(e.relatedTarget)) {
-                                            setPrioritySelectorExpanded(false); // only close if clicked outside
-                                            console.log("clicked outside");
-                                        }
-                                    }}
                                 >
-                                    <button
-                                        id="P0Flag"
-                                        type="button"
-                                        onClick={() => setPriority(0)}
-                                    >
-                                        <Icon name={"IconFlag"} />
-                                        <span>P0</span>
-                                    </button>
                                     <button
                                         id="P1Flag"
                                         type="button"
@@ -214,9 +213,18 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                                         <Icon name={"IconFlag"} />
                                         <span>P3</span>
                                     </button>
+                                    <button
+                                        id="P4Flag"
+                                        type="button"
+                                        onClick={() => setPriority(4)}
+                                    >
+                                        <Icon name={"IconFlag"} />
+                                        <span>P4</span>
+                                    </button>
                                 </div>
                             )}
-                            <button type="button" className="TodoAddTaskMoreButton">
+
+                            <button type="submit" className="TodoAddTaskMoreButton" name="more">
                                 <Icon name={"IconDots3"} />
                             </button>
                         </div>
@@ -236,9 +244,9 @@ const TodoAddTask = ({ sectionName = "Not Sectioned" }) => {
                     <p>Cancel</p>
                 </button>
 
-                <button className="TodoAddTaskAddButton" type="submit">
+                <button className="TodoAddTaskAddButton" type="submit" name="add">
                     <Icon name={"IconPlusFilled"} />
-                    <p>Add Task</p>
+                    <p>{title}</p>
                 </button>
             </div>
         </form>

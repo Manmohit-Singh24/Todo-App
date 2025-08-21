@@ -6,29 +6,40 @@ import { getPrettyDate } from "../../../utils/prettyDate";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import todoService from "../../../services/TodoServices";
-import { toogleTodoCompleted, updateTodo } from "../../../store/Features/TodoSlice";
+import {
+    toogleTodoCompleted,
+    updateTodo,
+    setEditingTaskId,
+} from "../../../store/Features/TodoSlice";
 import TodoDatePicker from "../TodoDatePicker/TodoDatePicker";
-const TodoTaskCard = ({
-    id = useId(),
-    task = "Default Task",
-    description = "Default Description",
-    priority = 0,
-    subTasks = {},
-    dueDate = undefined,
-    tagId = "inbox",
-    sectionName = "Not Sectioned",
-    completed = false,
-}) => {
+
+const TodoTaskCard = ({ id = useId(), parentTaskCompleted = false, view }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const {
+        task = "Default Task",
+        description = "Default Description",
+        priority = 4,
+        subTasks = {},
+        dueDate = null,
+        sectionId = "NotSectioned-inbox",
+        completed = false,
+        isSubTask = false,
+    } = useSelector((state) => state.TodoData.Todos[id]) || {};
+
+    const section = useSelector((state) => state.TodoData.Sections[sectionId]);
+    const sectionName = section?.sectionName;
+    const tagId = section?.tagId;
 
     const [expandSubTasks, setExpandSubTasks] = useState(false);
     const [expandDatePicker, setExpandedDatePicker] = useState(false);
 
-    const view = useSelector((state) => state.TodoData.View);
-    const tagName = useSelector((state) => state.TodoData.Tags[tagId]?.title);
-
-    const cardClassName = `TodoTaskCard ${completed ? "Checked" : ""}
+    view = view || useSelector((state) => state.TodoData.View);
+    const tag = useSelector((state) => state.TodoData.Tags[tagId]);
+    const tagName = tag?.title;
+    const tagColor = tag?.tagColor;
+    const cardClassName = `TodoTaskCard ${parentTaskCompleted || completed ? "Checked" : ""}
     ${view}View
     ${expandSubTasks ? "ExpandedSubTasks" : ""}`;
 
@@ -37,24 +48,27 @@ const TodoTaskCard = ({
     let subTasksRemaining = [];
     let subTasksCompleted = [];
 
-    for (const subTaskId in subTasks) {
-        const subTask = subTasks[subTaskId];
+    const subTasksState = useSelector((state) =>
+        Object.entries(subTasks)
+            .sort((a, b) => a[1] - b[1])
+            .map(([id]) => ({
+                id,
+                completed: state.TodoData.Todos[id]?.completed || false,
+            })),
+    );
+
+    for (const { id, completed : subTaskCompleted } of subTasksState) {
         const subTaskCard = (
-            <div className="TodoTaskCardSubTask" key={subTaskId}>
+            <div className="TodoTaskCardSubTask" key={id}>
                 <TodoTaskCard
-                    id={subTaskId}
-                    task={subTask?.task}
-                    description={subTask?.description}
-                    priority={subTask?.priority}
-                    dueDate={subTask?.dueDate}
-                    tag={subTask?.tag}
-                    subTasks={subTask?.subTasks}
-                    completed={subTask?.completed}
+                    id={id}
+                    parentTaskCompleted={parentTaskCompleted || completed}
+                    view={view}
                 />
             </div>
         );
 
-        if (subTask.completed) {
+        if (subTaskCompleted) {
             subTasksCompleted.push(subTaskCard);
         } else {
             subTasksRemaining.push(subTaskCard);
@@ -80,7 +94,7 @@ const TodoTaskCard = ({
         dispatch(
             updateTodo({
                 todoId: id,
-                todo: { dueDate: date.toISOString() },
+                todo: { dueDate: date?.toString() },
             }),
         );
     };
@@ -92,6 +106,10 @@ const TodoTaskCard = ({
             datePickerRef.current.focus();
         }
     }, [expandDatePicker]);
+
+    const editTask = () => {
+        dispatch(setEditingTaskId({ todoId: id }));
+    };
 
     return (
         <div className={cardClassName} id={`P${priority}`}>
@@ -109,9 +127,9 @@ const TodoTaskCard = ({
                 )}
             </div>
             <div className="TodoTaskCardTaskAndSubTaskContainer">
-                <div className="TodoTaskCardContainer">
+                <div className="TodoTaskCardContainer" onClick={editTask}>
                     <TodoCheckBox
-                        checked={completed}
+                        checked={parentTaskCompleted || completed}
                         setChecked={toogleCompleted}
                         priority={priority}
                     />
@@ -132,12 +150,31 @@ const TodoTaskCard = ({
                     <button
                         style={{ "--fill": dateColor }}
                         className="TodoTaskCardDueDate"
-                        onClick={() => setExpandedDatePicker(!expandDatePicker)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (!completed) setExpandedDatePicker(!expandDatePicker);
+                        }}
                     >
                         <Icon name={"IconCalendar2"} size="S" />
                         <span>{dueDatePretty} </span>
                     </button>
 
+                    {!isSubTask && tagName && (
+                        <button
+                            className="TodoTaskCardTag"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/app/todo/${tagId}`);
+                            }}
+                            style={{ "--color": tagColor }}
+                        >
+                            <Icon name={"IconTag"} size="S" />
+                            <span>
+                                {tagName}
+                                {sectionName != "Not Sectioned" && `/${sectionName}`}{" "}
+                            </span>
+                        </button>
+                    )}
                     {expandDatePicker && (
                         <div
                             className="TodoTaskCardDatePicker"
@@ -152,19 +189,6 @@ const TodoTaskCard = ({
                         >
                             <TodoDatePicker dueDate={dueDate} setDateValue={dateChange} />
                         </div>
-                    )}
-
-                    {tagName && (
-                        <button
-                            className="TodoTaskCardTag"
-                            onClick={() => navigate(`/app/todo/${tagId}`)}
-                        >
-                            <Icon name={"IconTag"} size="S" />
-                            <span>
-                                {tagName}
-                                {sectionName != "Not Sectioned" && `/${sectionName}`}{" "}
-                            </span>
-                        </button>
                     )}
                 </div>
                 {view === "List" && expandSubTasks && subTasksTotal > 0 && (

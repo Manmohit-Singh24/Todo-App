@@ -11,7 +11,7 @@ export const prettyDatecolors = {
     default: "var(--Disabled)",
 };
 
-export const prettyTodayString = dayjs().format("DD MMM , YYYY");
+export const prettyTodayString = dayjs().format("dddd , DD MMM");
 
 export function getPrettyDate(date) {
     if (!date) return ["No Date", prettyDatecolors.default];
@@ -42,7 +42,7 @@ export function getPrettyDate(date) {
         dateString = date.format("ddd");
         color = prettyDatecolors.thisWeek;
     } else if (date.isSameOrBefore(nextSunday, "day") && date.isAfter(thisSunday, "day")) {
-        dateString = date.format("dd, DD MMM");
+        dateString = date.format("ddd, DD MMM");
         color = prettyDatecolors.nextWeek;
     } else {
         dateString = date.year() > thisYear ? date.format("DD MMM, YYYY") : date.format("DD MMM");

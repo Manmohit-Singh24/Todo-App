@@ -1,71 +1,46 @@
 import "./TodoPageComponent.css";
-import { TodoTaskCard, TodoSection, TodoAddTask } from "../";
-import { useSelector } from "react-redux";
+import { TodoSection } from "../";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getPrettyDate, prettyDatecolors, prettyTodayString } from "../../utils/prettyDate";
+import TodoEditTask from "./TodoEditTask/TodoEditTask";
 const TodoPageComponent = ({}) => {
-    const { pageId } = useParams();
+    const { tagId } = useParams();
+
+    if (tagId === "upcoming") return <></>; // TODO :remove this later
+
+    const dispatch = useDispatch();
 
     const view = useSelector((state) => state.TodoData.View);
+    const edittingTaskId = useSelector((state) => state.TodoData.EditingTaskId);
 
-    const heading = (() => {
-        const title = useSelector((state) => state.TodoData.Tags[pageId]?.title);
-        const result = (title || pageId).toString();
-        return result.charAt(0).toUpperCase() + result.slice(1);
-    })();
+    const heading = useSelector((state) => {
+        const title = (state.TodoData.Tags[tagId]?.title || tagId).toString();
+        return title.charAt(0).toUpperCase() + title.slice(1);
+    });
 
-    const todos = useSelector((state) => state.TodoData.Todos);
-    const sections = useSelector((state) => state.TodoData.Tags[pageId]?.sections);
+    let sortedSections = useSelector((state) => {
+        return Object.entries(state.TodoData.Tags[tagId]?.sections || {})
+            .sort((a, b) => a[1] - b[1]) // sort by order value
+            .map(([id]) => id); // extract only the todoIds if needed;
+    });    
 
-    const sectionSortedTodos =
-        pageId === "today"
-            ? { Overdue: {}, [`${prettyTodayString} , Today`]: {}, Completed: {} }
-            : pageId === "upcoming"
-            ? { Upcoming: {}, Completed: {} }
-            : { ...Object.fromEntries(sections.map((key) => [key, {}])), Completed: {} };
-
-    for (let todoId in todos) {
-        let todo = todos[todoId];
-
-        switch (pageId) {
-            case "today":
-                let prettyDate = getPrettyDate(todo.dueDate);
-
-                if (
-                    (prettyDate[0] === "Today" || prettyDate[1] === prettyDatecolors.overdue) &&
-                    todo.completed
-                )
-                    sectionSortedTodos.Completed[todoId] = todo;
-                else if (prettyDate[0] === "Today")
-                    sectionSortedTodos[`${prettyTodayString} , Today`][todoId] = todo;
-                else if (prettyDate[1] === prettyDatecolors.overdue)
-                    sectionSortedTodos["Overdue"][todoId] = todo;
-
-                break;
-            case "upcoming":
-                break;
-            default:
-                if (todo.tagId === pageId) {
-                    if (todo.completed) sectionSortedTodos.Completed[todoId] = todo;
-                    else sectionSortedTodos[todo.sectionName][todoId] = todo;
-                }
-        }
-    }
-
-    let sectionComponents = [];
-    for (let section in sectionSortedTodos) {
-        sectionComponents?.push(
-            <TodoSection sectionName={section} todos={sectionSortedTodos[section]} key={section} />,
+    let sectionComponents = sortedSections?.map((sectionId) => {
+        return (
+            <TodoSection
+                sectionId={sectionId}
+                key={sectionId}
+            />
         );
-    }
+    }) || <></>;
+
 
     return (
         <div className={`TodoPageComponentContainer ${view}View`}>
             <div className="TodoPageComponentHeader"></div>
             <div className="TodoPageComponentHeading">{heading}</div>
             <div className={`TodoPageComponentSectionsContainer ${view}View`}>
-                {" "}
                 {sectionComponents}
+                {edittingTaskId && <TodoEditTask id={edittingTaskId} />}
             </div>
         </div>
     );

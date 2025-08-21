@@ -27,7 +27,7 @@ const router = createBrowserRouter([
                 element: <AuthPage />,
             },
             {
-                path: "app/:pageType/:pageId",
+                path: "app/:pageType/:tagId",
                 element: <MainPage />,
             },
         ],

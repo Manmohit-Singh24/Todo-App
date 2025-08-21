@@ -35,5 +35,5 @@
     --DateTomorrow: #E69641;
     --DateThisWeek: #8647D9;
     --DateNextWeek: #0071ff;
-    --DateDefault: var(--Disabled);
+    --DateDefault: var(--Disabled); 
 } 

@@ -11,6 +11,8 @@
     transition-duration: 0.3s;
     opacity: 0.4;
 
+    flex-shrink: 0;
+
     &:hover {
         opacity: 0.8;
     }
@@ -26,13 +28,14 @@
         transition-duration: 0.3s;
         width: 100%;
         cursor: pointer;
-
+        height: fit-content;
         .TodoAddTaskCancelButton,
         .TodoAddTaskAddButton {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
+            height: fit-content;
 
             border-radius: 0.6rem;
             padding: 0.5rem;
@@ -78,19 +81,29 @@
         .TodoAddTaskInputContainer {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
             width: 100%;
 
             .TodoAddTaskTitleInput,
             .TodoAddTaskDescriptionInput {
-                width: 100%;
                 border: none;
+                padding: 0.5rem;
+                text-wrap: nowrap;
+                line-height: 1.5rem;
+                width: 96%;
+                min-height: 2.5rem;
+                resize: none;
+                white-space: pre-wrap;
+                overflow-wrap: break-word;
+                overflow: hidden;
+                transition-duration: 0.3s;
+                flex-shrink: 0;
 
                 &::placeholder {
                     color: var(--Disabled);
                 }
 
-                &:focus {
+                &:focus,
+                &:focus-within {
                     outline: none;
                 }
             }
@@ -116,7 +129,7 @@
             .TodoAddTaskPriorityButton,
             .TodoAddTaskMoreButton {
                 cursor: pointer;
-                border: 0.1rem solid var(--TaskBox-P0-BG);
+                border: 0.1rem solid var(--TaskBox-P4-BG);
                 background-color: transparent;
                 border-radius: 0.5rem;
                 padding: 0.5rem;
@@ -134,7 +147,7 @@
             }
 
             .TodoAddTaskDateButton {
-                --IconColor: var(--TaskBox-P0);
+                --IconColor: var(--TaskBox-P4);
                 svg * {
                     fill: var(--IconColor);
                 }
@@ -142,16 +155,16 @@
 
             .TodoAddTaskPriorityButton svg {
                 :first-child {
-                    fill: var(--TaskBox-P0-BG);
+                    fill: var(--TaskBox-P4-BG);
                 }
 
                 :last-child {
-                    fill: var(--TaskBox-P0);
+                    fill: var(--TaskBox-P4);
                 }
             }
 
             .TodoAddTaskMoreButton svg * {
-                stroke: var(--TaskBox-P0);
+                stroke: var(--TaskBox-P4);
                 stroke-width: 0.15rem;
             }
         }
@@ -160,19 +173,18 @@
     .TodoAddTaskDivider {
         width: 100%;
         height: 0.01rem;
-        border-top: 0.1rem solid var(--TaskBox-P0-BG);
+        border-top: 0.1rem solid var(--TaskBox-P4-BG);
         margin-top: 1rem;
     }
 
     &.AddingTask {
-        padding: 1rem;
-        border-color: var(--TaskBox-P0-BG);
+        padding: 1rem 1rem 3.7rem;
+        border-color: var(--TaskBox-P4-BG);
         opacity: 1;
         .TodoAddTaskBottomButtons {
             width: fit-content;
-            top: 80%;
+            top: calc(100% - 1.9rem);
             cursor: auto;
-
             .TodoAddTaskAddButton,
             .TodoAddTaskCancelButton {
                 transform: translate(0, 0);
@@ -181,7 +193,7 @@
                     height: 1.5rem;
                 }
             }
-
+ 
             .TodoAddTaskCancelButton {
                 border-color: rgba(from var(--Secondary-Text) r g b / 50%);
 
@@ -213,7 +225,7 @@
 
         &:hover,
         &:focus-within {
-            border-color: var(--TaskBox-P0);
+            border-color: var(--TaskBox-P4);
             box-shadow: 0 0 0.2rem 0.1rem rgba(0, 0, 0, 0.2);
         }
     }
@@ -223,8 +235,9 @@
     border-radius: 1rem;
     width: 30rem;
     margin-left: 2.5rem;
+
     &.AddingTask {
-        height: 13rem;
+        min-height: 13rem;
     }
     .TodoAddTaskContentContainer {
         flex-direction: column;
@@ -251,7 +264,8 @@
     width: calc(100% - 5.6rem);
 
     &.AddingTask {
-        height: 10rem;
+        /* min-height: 10rem; */
+        height: auto;
     }
     .TodoAddTaskContentContainer {
         justify-content: space-between;
@@ -261,16 +275,16 @@
 .TodoAddTaskDatePickerContainer {
     position: absolute;
     top: 3rem;
+    right: 0;
     z-index: 9999;
     height: auto;
-        box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
-
+    box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.1);
 }
 
 .TodoAddTaskPrioritySelectorContainer {
     position: absolute;
     top: 3rem;
-    left: 3.5rem;
+    right: 0;
     z-index: 9999;
     background-color: var(--Primary-BG);
     border-radius: 1rem;
@@ -293,27 +307,6 @@
         padding: 0.3rem 1rem;
         border-radius: 0.5rem;
         border: solid 0.1rem;
-    }
-}
-
-#P0Flag {
-    .Icon svg {
-        :first-child {
-            fill: var(--TaskBox-P0-BG);
-        }
-
-        :last-child {
-            fill: var(--TaskBox-P0);
-        }
-    }
-
-    color: var(--TaskBox-P0);
-    border-color: var(--TaskBox-P0-BG);
-
-    &:hover {
-        border-color: var(--TaskBox-P0);
-
-        background-color: var(--TaskBox-P0-BG);
     }
 }
 
@@ -377,5 +370,26 @@
         border-color: var(--TaskBox-P3);
 
         background-color: var(--TaskBox-P3-BG);
+    }
+}
+
+#P4Flag {
+    .Icon svg {
+        :first-child {
+            fill: var(--TaskBox-P4-BG);
+        }
+
+        :last-child {
+            fill: var(--TaskBox-P4);
+        }
+    }
+
+    color: var(--TaskBox-P4);
+    border-color: var(--TaskBox-P4-BG);
+
+    &:hover {
+        border-color: var(--TaskBox-P4);
+
+        background-color: var(--TaskBox-P4-BG);
     }
 }
