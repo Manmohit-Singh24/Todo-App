@@ -137,10 +137,12 @@
     .TodoSectionHeadingEditFormCancelButton {
         color: var(--Secondary-Text);
         border-color: var(--Secondary-Text);
-        .Icon * {
-            fill: var(--Secondary-Text);
+        .Icon {
+            rotate: 45deg;
+            * {
+                fill: var(--Secondary-Text);
+            }
         }
-
         &:hover {
             background-color: var(--Secondary-Text);
             color: var(--Primary-BG);
@@ -235,7 +237,6 @@
     }
 }
 
-
 .TodoSectionContent {
     display: flex;
     flex-direction: column;
@@ -281,4 +282,10 @@
         overflow: hidden;
         max-height: 0;
     }
+}
+
+.TodoSectionAddTask{
+    display: flex;
+    width: 100%;
+    justify-content: center;
 }

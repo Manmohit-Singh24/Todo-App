@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import todoService from "../../../services/TodoServices";
 import { addTodo, setEditingTaskId, addSubTask } from "../../../store/Features/TodoSlice";
-import { useParams } from "react-router-dom";
 import TodoDatePicker from "../TodoDatePicker/TodoDatePicker";
 import { getPrettyDate } from "../../../utils/prettyDate";
 const TodoAddTask = ({
@@ -54,7 +53,7 @@ const TodoAddTask = ({
                 task: formData.task,
                 description: formData.description,
                 priority: priority,
-                dueDate: dueDate?.toString(),
+                dueDate: dueDate?.toString() ,
                 sectionId: sectionId,
                 completed: false,
                 subTasks: {},
@@ -128,8 +127,11 @@ const TodoAddTask = ({
 
 
     return (
-        <form className={contianerClassName} onSubmit={handleSubmit(addTaskClick)}>
-            {addingTask && (
+        <form className={contianerClassName} onSubmit={handleSubmit(addTaskClick)} onClick={(e) => {
+            e.stopPropagation();
+            if(!addingTask) setAddingTask(true);
+        }}>
+            {/* {addingTask && ( */}
                 <>
                     <div className="TodoAddTaskContentContainer">
                         <div className="TodoAddTaskInputContainer">
@@ -232,7 +234,7 @@ const TodoAddTask = ({
 
                     <div className="TodoAddTaskDivider" />
                 </>
-            )}
+            {/* )} */}
 
             <div className="TodoAddTaskBottomButtons">
                 <button

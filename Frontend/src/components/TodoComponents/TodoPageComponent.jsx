@@ -1,14 +1,12 @@
 import "./TodoPageComponent.css";
-import { TodoSection } from "../";
-import { useSelector, useDispatch } from "react-redux";
+import { TodoSection, TodoAddSection } from "../";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import TodoEditTask from "./TodoEditTask/TodoEditTask";
 const TodoPageComponent = ({}) => {
     const { tagId } = useParams();
 
     if (tagId === "upcoming") return <></>; // TODO :remove this later
-
-    const dispatch = useDispatch();
 
     const view = useSelector((state) => state.TodoData.View);
     const edittingTaskId = useSelector((state) => state.TodoData.EditingTaskId);
@@ -22,21 +20,21 @@ const TodoPageComponent = ({}) => {
         return Object.entries(state.TodoData.Tags[tagId]?.sections || {})
             .sort((a, b) => a[1] - b[1]) // sort by order value
             .map(([id]) => id); // extract only the todoIds if needed;
-    });    
+    });
 
     let sectionComponents = sortedSections?.map((sectionId) => {
-        return (
-            <TodoSection
-                sectionId={sectionId}
-                key={sectionId}
-            />
-        );
+        if ( tagId !== "today" && sectionId.split("-")[0] === "Completed") {
+            return (
+                <>
+                    <TodoAddSection />
+                    <TodoSection sectionId={sectionId} key={sectionId} />
+                </>
+            );
+        }else return <TodoSection sectionId={sectionId} key={sectionId} />;
     }) || <></>;
-
 
     return (
         <div className={`TodoPageComponentContainer ${view}View`}>
-            <div className="TodoPageComponentHeader"></div>
             <div className="TodoPageComponentHeading">{heading}</div>
             <div className={`TodoPageComponentSectionsContainer ${view}View`}>
                 {sectionComponents}

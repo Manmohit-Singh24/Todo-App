@@ -1,13 +1,12 @@
-import "./MainPage.css";
+import "./Dashboard.css";
 import { SideBar, TodoPageComponent } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { setTags, setTodos, setSections, setHighestTagOrder } from "../../store/Features/TodoSlice";
 import todoService from "../../services/TodoServices";
 import { useEffect, useState } from "react";
 import { getPrettyDate, prettyDatecolors, prettyTodayString } from "../../utils/prettyDate";
-import {ConfirmDeleteAlert} from "../../components";
-
-const MainPage = () => {
+import { ConfirmDeleteAlert, DashboardHeader } from "../../components";
+const Dashboard = () => {
     const dispatch = useDispatch();
     const [pageContainer, setPageContainer] = useState(<></>);
     const email = useSelector((state) => state.AuthData.Email);
@@ -41,9 +40,9 @@ const MainPage = () => {
                 tags[tagId].sections = {};
                 tags[tagId].highestSectionOrder = 0;
 
-                if (tags[tagId].order > highestOrderTag) {
+                let order = tags[tagId].order;
+                if (order > highestOrderTag && (!order === Infinity || !order === -Infinity))
                     highestOrderTag = tags[tagId].order;
-                }
 
                 sections[`Completed-${tagId}`] = {
                     sectionName: "Completed",
@@ -60,10 +59,14 @@ const MainPage = () => {
                 let parentTagId = sections[sectionId].tagId;
 
                 tags[parentTagId].sections[sectionId] = sections[sectionId].order;
-
-                if (sections[sectionId].order > tags[parentTagId].highestSectionOrder) {
+                                
+                let order = sections[sectionId].order; ;
+                if (
+                    order > tags[parentTagId].highestSectionOrder &&
+                    (!order === Infinity || !order === -Infinity)
+                )
                     tags[parentTagId].highestSectionOrder = sections[sectionId].order;
-                }
+
             }
 
             for (let todoId in todos) {
@@ -77,9 +80,10 @@ const MainPage = () => {
                 } else {
                     let sectionId = todos[todoId].sectionId;
                     let completedSectionId = `Completed-${sections[todos[todoId].sectionId].tagId}`;
-                    if (todos[todoId].order > sections[sectionId].highestTodoOrder) {
+
+                    let order = todos[todoId].order;
+                    if (order > sections[sectionId].highestTodoOrder && (!order === Infinity || !order === -Infinity))
                         sections[sectionId].highestTodoOrder = todos[todoId].order;
-                    }
 
                     sections[sectionId].todos[todoId] = todos[todoId].order;
                     sections[completedSectionId].todos[todoId] = todos[todoId].order;
@@ -114,14 +118,15 @@ const MainPage = () => {
         loadTodos();
     }, []);
 
-
     return (
-        <div className="MainPage">
+        <div className="Dashboard">
+            <DashboardHeader />
             <SideBar />
-            <main className="MainPageContainer">{pageContainer}</main>
+            <main className="DashboardMainContainer">{pageContainer}</main>
+            <footer></footer>
             <ConfirmDeleteAlert />
         </div>
     );
 };
 
-export default MainPage;
+export default Dashboard;

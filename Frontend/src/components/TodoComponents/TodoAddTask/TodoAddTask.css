@@ -2,13 +2,14 @@
     margin-block: 1rem;
     position: relative;
 
-    height: 0rem;
-
+    max-height: 0rem;
+    width: 100%;
     border: 0.1rem solid transparent;
     border-top-color: rgba(from var(--Accent-Color) r g b / 50%);
     border-radius: 1rem;
 
-    transition-duration: 0.3s;
+    transition: all 0.3s linear, max-width 0.2s linear, max-height 0.3s linear 0.2s,
+        padding 0.3s linear 0.2s;
     opacity: 0.4;
 
     flex-shrink: 0;
@@ -25,10 +26,11 @@
         top: 0;
         left: 50%;
         transform: translate(-50%, -50%);
-        transition-duration: 0.3s;
+        transition: all 0.3s linear 0.2s;
         width: 100%;
         cursor: pointer;
         height: fit-content;
+
         .TodoAddTaskCancelButton,
         .TodoAddTaskAddButton {
             display: flex;
@@ -40,8 +42,9 @@
             border-radius: 0.6rem;
             padding: 0.5rem;
             cursor: pointer;
-            font: var(--Text-1);
-            transition: background-color 0.2s linear, transform 0.3s linear 0.2s;
+            font: var(--Text-2);
+            border: solid 0.1rem transparent;
+            transition: background-color 0.2s linear, transform 0.3s linear 0.5s;
 
             .Icon {
                 height: 1.8rem;
@@ -49,7 +52,6 @@
         }
 
         .TodoAddTaskCancelButton {
-            border: solid 0.1rem transparent;
             background-color: var(--Primary-BG);
             color: var(--Secondary-Text);
             transform: translate(50%, 0);
@@ -63,7 +65,6 @@
         }
 
         .TodoAddTaskAddButton {
-            border: solid 0.1rem transparent;
             background-color: var(--Primary-BG);
             color: var(--Accent-Color);
             transform: translate(-50%, 0);
@@ -77,6 +78,9 @@
     .TodoAddTaskContentContainer {
         display: flex;
         width: 100%;
+        max-height: 0rem;
+        overflow: hidden;
+        transition: max-height 0.3s linear 0.2s;
 
         .TodoAddTaskInputContainer {
             display: flex;
@@ -175,12 +179,14 @@
         height: 0.01rem;
         border-top: 0.1rem solid var(--TaskBox-P4-BG);
         margin-top: 1rem;
+        opacity: 0;
     }
 
     &.AddingTask {
         padding: 1rem 1rem 3.7rem;
         border-color: var(--TaskBox-P4-BG);
         opacity: 1;
+
         .TodoAddTaskBottomButtons {
             width: fit-content;
             top: calc(100% - 1.9rem);
@@ -188,12 +194,11 @@
             .TodoAddTaskAddButton,
             .TodoAddTaskCancelButton {
                 transform: translate(0, 0);
-                font: var(--Text-2);
                 .Icon {
                     height: 1.5rem;
                 }
             }
- 
+
             .TodoAddTaskCancelButton {
                 border-color: rgba(from var(--Secondary-Text) r g b / 50%);
 
@@ -222,7 +227,13 @@
                 }
             }
         }
-
+        .TodoAddTaskContentContainer {
+            max-height: 10rem;
+        }
+        .TodoAddTaskDivider {
+            opacity: 1;
+            transition-delay: 0.3s;
+        }
         &:hover,
         &:focus-within {
             border-color: var(--TaskBox-P4);
@@ -261,11 +272,11 @@
 .TodoAddTaskContainer.ListView {
     align-self: center;
     margin-left: 5.6rem;
-    width: calc(100% - 5.6rem);
+    max-width: 30rem;
 
     &.AddingTask {
-        /* min-height: 10rem; */
-        height: auto;
+        max-height: 12rem;
+        max-width: calc(100% - 5.6rem);
     }
     .TodoAddTaskContentContainer {
         justify-content: space-between;

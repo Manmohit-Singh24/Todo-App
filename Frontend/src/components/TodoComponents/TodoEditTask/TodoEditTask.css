@@ -11,34 +11,12 @@
     z-index: 100;
 }
 
-.TodoEditTaskCloseButton {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: solid 0.1rem var(--TaskBox-P1-BG);
-    background-color: transparent;
-    transition-duration: 0.2s;
-    svg * {
-        fill: var(--TaskBox-P1);
-        transition-duration: 0.2s;
-    }
-    &:hover {
-        background-color: var(--TaskBox-P1);
-        svg * {
-            fill: var(--Primary-BG);
-        }
-    }
-}
-
 .TodoEditTaskContainer {
     position: relative;
     display: flex;
     flex-direction: column;
     border-radius: 1rem;
-    padding: 3rem 5rem;
+    padding: 1rem 5rem 3rem;
     background-color: var(--Primary-BG);
     box-shadow: 0 0 0.2rem 0.1rem rgba(0, 0, 0, 0.1);
     width: 80%;
@@ -78,11 +56,35 @@
 
         .TodoEditTaskPriorityButton,
         .TodoEditTaskDateButton {
-            
             &:hover {
                 background-color: rgba(0, 0, 0, 0.03) !important;
                 cursor: not-allowed;
             }
+        }
+    }
+}
+
+.TodoEditTaskCloseButton {
+    position: absolute;
+    top: 1rem;
+    right: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: solid 0.1rem var(--TaskBox-P4-BG);
+    background-color: transparent;
+    transition-duration: 0.2s;
+    opacity: 0.7;
+    svg * {
+        fill: var(--TaskBox-P4);
+        transition-duration: 0.2s;
+    }
+    &:hover {
+        opacity: 1;
+        background-color: var(--TaskBox-P1);
+        border-color: var(--TaskBox-P1);
+        svg * {
+            fill: var(--Primary-BG);
         }
     }
 }
@@ -95,7 +97,7 @@
     font: var(--Text-2);
     color: var(--Disabled);
     border-radius: 0.5rem;
-    box-shadow: 0 0 0.2rem 0.1rem rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0.2rem 0.1rem rgba(0, 0, 0, 0.08);
     width: fit-content;
 
     button {
@@ -104,10 +106,10 @@
         display: flex;
         align-items: center;
         font: var(--Text-2);
-        color: var(--Disabled);
+        color: var(--Secondary-Text);
         gap: 0.5rem;
         transition: all 0.25s;
-        padding: 0.3rem;
+        padding: 0.5rem;
         border-radius: 0.5rem;
         border: solid 0.1rem transparent;
 
@@ -118,10 +120,18 @@
     }
 
     .TodoEditTaskTagButton {
+        --tagColor: var(--Secondary-Text);
         border-color: rgba(0, 0, 0, 0.1);
-        color: var(--Secondary-Text);
-        .Icon svg * {
-            fill: var(--Secondary-Text);
+
+        :nth-child(1).Icon svg * {
+            fill: var(--tagColor);
+            stroke: var(--tagColor);
+            stroke-width: 0.15rem;
+        }
+
+        :nth-child(3).Icon svg * {
+            stroke: var(--Secondary-Text);
+            stroke-width: 0.15rem;
         }
 
         span {
@@ -156,7 +166,7 @@
 .TodoEditTaskMain {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
     /* overflow-y: scroll; */
     overflow-y: auto;
 
@@ -172,7 +182,7 @@
 
     align-items: start;
     border-bottom: 0.05rem solid rgba(0, 0, 0, 0.1);
-    padding-block: 1rem;
+    padding-block: 1rem 2rem;
 
     & > :nth-child(1) {
         margin-top: 0.4rem;
@@ -303,7 +313,7 @@
     background-color: transparent;
     cursor: pointer;
     transition: all 0.25s;
-    padding: 0.5rem; 
+    padding: 0.5rem;
     border-radius: 0.5rem;
     border: solid 0.1rem var(--color);
     grid-row: 3/4;
@@ -415,26 +425,29 @@
         flex-direction: column;
         gap: 1rem;
         overflow-y: auto;
-
-        height: 100%;
+        height: fit-content;
     }
 
     .TodoEditTaskSubTasksCompleted {
         margin-left: 2.4rem;
-        margin-bottom: 2rem;
+        /* margin-bottom: 2rem; */
+        width: calc(100% - 2.4rem);
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
         overflow: hidden;
+        min-height: 10rem;
         .TodoEditTaskSubTasksHeading {
             font: var(--Text-1);
             color: var(--Secondary-Text);
         }
+
     }
 }
 
 .TodoEditTaskSubTasksContainer.Expanded,
 .TodoEditTaskSubTasksCompleted.Expanded {
+    min-height: 2rem;
     .TodoEditTaskSubTasksVIcon {
         transform: rotate(-90deg);
     }

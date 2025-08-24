@@ -6,6 +6,7 @@ import TodoTaskCard from "../TodoTaskCard/TodoTaskCard";
 import TodoAddTask from "../TodoAddTask/TodoAddTask";
 import { updateSection, deleteSection } from "../../../store/Features/TodoSlice";
 import { setConfirmDelete } from "../../../store/Features/GeneralSlice";
+import TodoAddSection from "../TodoAddSection/TodoAddSection";
 
 const TodoSection = ({ sectionId }) => {
     const dispatch = useDispatch();
@@ -100,7 +101,7 @@ const TodoSection = ({ sectionId }) => {
     return (
         <section className={containerClass}>
             {/*------------------ Section Heading ------------------ */}
-            {view === "List" && sectionName !== "Not Sectioned" && (
+            {!(view === "List" && sectionName === "Not Sectioned")  && (
                 <div className="TodoSectionHeadingContainer">
                     <div className="TodoSectionHeadingLeftIcons">
                         <button className="TodoSectionHeadingDragIcon">

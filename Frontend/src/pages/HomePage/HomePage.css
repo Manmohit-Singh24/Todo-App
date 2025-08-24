@@ -8,7 +8,10 @@
     
     h1{
         font : var(--Heading-1);
-        font-size: 5rem;    
-        
+        font-size: 5rem;      
+    }
+
+    .HomePageButton{
+        color: var(--Secondary-BG);
     }
 }

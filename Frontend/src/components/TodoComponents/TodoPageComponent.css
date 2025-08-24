@@ -8,7 +8,7 @@
     padding-inline: 10%;
     gap: 2rem;
     align-self: center;
- 
+
     &.ListView {
         padding-inline: 10%;
     }
@@ -26,7 +26,7 @@
 
 .TodoPageComponentSectionsContainer {
     display: flex;
-    gap: 1rem;
+    gap: 4rem;
     &.ListView {
         flex-direction: column;
         width: 100%;

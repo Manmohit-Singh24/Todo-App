@@ -42,6 +42,7 @@ const TodoSlice = createSlice({
         Todos: {},
         View: "List",
         EditingTaskId: null,
+        visibleAddSection: false,
         HighestTagOrder: 0,
     },
     reducers: {
@@ -57,9 +58,10 @@ const TodoSlice = createSlice({
             state.Todos[action.payload.todoId].completed = action.payload.completed;
             const sectionId = state.Todos[action.payload.todoId].sectionId;
 
-            if (action.payload.completed) state.Sections[sectionId].number--;
-            else state.Sections[sectionId].number++;
-
+            if (sectionId) {
+                if (action.payload.completed) state.Sections[sectionId].number--;
+                else state.Sections[sectionId].number++;
+            }
             checkForTodayStatus(state, action.payload.todoId, "ToogleComplete");
         },
         updateTodo: (state, action) => {
@@ -105,17 +107,17 @@ const TodoSlice = createSlice({
         addSubTask: (state, action) => {
             const todoId = action.payload.todoId;
             const todo = action.payload.todo;
-            const parentTaskId = action.payload.parentTaskId;
-            const parentTask = state.Todos[parentTaskId];
-            todo.order = state.Sections[parentTask.sectionId].highestTodoOrder++;
+            const parentTodoId = action.payload.parentTaskId;
+            const parentTodo = state.Todos[parentTodoId];
+            todo.order = state.Sections[parentTodo.sectionId].highestTodoOrder++;
 
-            todo.parentTaskId = parentTaskId;
+            todo.parentTodoId = parentTodoId;
             todo.isSubTask = true;
-
+            
             state.Todos[todoId] = todo;
 
-            if (parentTask.subTasks) state.Todos[parentTaskId].subTasks[todoId] = todo.order;
-            else state.Todos[parentTaskId].subTasks = { [todoId]: todo.order };
+            if (parentTodo.subTasks) state.Todos[parentTodoId].subTasks[todoId] = todo.order;
+            else state.Todos[parentTodoId].subTasks = { [todoId]: todo.order };
 
             checkForTodayStatus(state, todoId, "Add");
         },
@@ -191,21 +193,34 @@ const TodoSlice = createSlice({
             state.Sections = action.payload.Sections;
         },
 
+        showAddSection: (state, action) => {
+            state.visibleAddSection = action.payload.visibleAddSection;
+        },
+
         addSection: (state, action) => {
-            let tagData = {
-                title: action.payload.tag?.title || "SideBarLabel",
-                sections: ["Not Sectioned"].concat(action.payload.tag?.sections || []),
-                number: action.payload.tag?.number || "",
-                tagColor: action.payload.tag?.tagColor || "#999999",
+            const sectionId = action.payload.sectionId;
+            console.log(action.payload.section.tagId);
+
+            const sectionOrder = state.Tags[action.payload.section.tagId].highestSectionOrder++;
+            const section = {
+                ...action.payload.section,
+                number: 0,
+                todos: {},
+                highestTodoOrder: 0,
+                order: sectionOrder,
             };
-            state.Tags[action.payload.tagId] = tagData;
+            console.log(section);
+
+            state.Sections[sectionId] = section;
+
+            state.Tags[section.tagId].sections[sectionId] = sectionOrder;
         },
 
         deleteSection: (state, action) => {
             const sectionId = action.payload.sectionId;
             Object.keys(state.Sections[sectionId].todos).forEach((todoId) => {
                 delete state.Todos[todoId];
-            })
+            });
             delete state.Tags[state.Sections[sectionId].tagId].sections[sectionId];
             delete state.Sections[sectionId];
         },
@@ -239,6 +254,7 @@ export const {
     updateTag,
 
     setSections,
+    showAddSection,
     addSection,
     deleteSection,
     updateSection,

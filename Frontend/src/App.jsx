@@ -6,9 +6,7 @@ import { store } from "./store/store.js";
 const App = () => {
     return (
         <Provider store={store}>
-            <div className="App">
-                <Outlet />
-            </div>
+            <Outlet />
         </Provider>
     );
 };

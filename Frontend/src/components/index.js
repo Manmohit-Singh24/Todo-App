@@ -3,11 +3,12 @@ import Form from "./FormComponents/Form";
 import Input from "./FormComponents/Input/Input";
 import Button from "./FormComponents/Button/Button";
 import FileUpload from "./FormComponents/FileUpload/FileUpload";
-// -----------MainPageComponents-----------------------
-import ConfirmDeleteAlert from "./MainPageComponents/ConfirmDeleteAlert/ConfirmDeleteAlert";
-import SideBar from "./MainPageComponents/SideBar/SideBar";
-import SideBarHeader from "./MainPageComponents/SideBar/SideBarHeader/SideBarHeader";
-import SideBarLabel from "./MainPageComponents/SideBar/SideBarLabel/SideBarLabel";
+// -----------DashboardComponents-----------------------
+import ConfirmDeleteAlert from "./DashboardComponents/ConfirmDeleteAlert/ConfirmDeleteAlert";
+import SideBar from "./DashboardComponents/SideBar/SideBar";
+import SideBarHeader from "./DashboardComponents/SideBar/SideBarHeader/SideBarHeader";
+import SideBarLabel from "./DashboardComponents/SideBar/SideBarLabel/SideBarLabel";
+import DashboardHeader from "./DashboardComponents/DashboardHeader/DashboardHeader";
 // ------------AuthComponents--------------------
 import LoginForm from "./AuthComponents/LoginForm";
 import RegisterForm from "./AuthComponents/RegisterForm";
@@ -20,17 +21,21 @@ import TodoTaskCard from "./TodoComponents/TodoTaskCard/TodoTaskCard";
 import TodoSection from "./TodoComponents/TodoSection/TodoSection";
 import TodoAddTask from "./TodoComponents/TodoAddTask/TodoAddTask";
 import TodoPageComponent from "./TodoComponents/TodoPageComponent";
+import TodoAddSection from "./TodoComponents/TodoAddSection/TodoAddSection";
+import TodoEditTask from "./TodoComponents/TodoEditTask/TodoEditTask";
+import TodoDatePicker from "./TodoComponents/TodoDatePicker/TodoDatePicker";
 export {
     // -----------Form----------------------------
     Form,
     Input,
     Button,
     FileUpload,
-    // -----------MainPageComponents-----------------------
+    // -----------DashboardComponents-----------------------
     ConfirmDeleteAlert,
     SideBar,
     SideBarHeader,
     SideBarLabel,
+    DashboardHeader,
     // ------------AuthComponents-------------------
     LoginForm,
     RegisterForm,
@@ -42,5 +47,8 @@ export {
     TodoTaskCard,
     TodoSection,
     TodoAddTask,
-    TodoPageComponent
+    TodoPageComponent,
+    TodoAddSection,
+    TodoEditTask,
+    TodoDatePicker,
 };

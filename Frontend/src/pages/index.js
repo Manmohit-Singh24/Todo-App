@@ -1,9 +1,9 @@
 import AuthPage from "./AuthPage/AuthPage";
 import HomePage from "./HomePage/HomePage";
-import MainPage from "./MainPage/MainPage";
+import Dashboard from "./DashboardPage/Dashboard";
 export {
     AuthPage,
     HomePage,
-    MainPage
+    Dashboard
 }
  

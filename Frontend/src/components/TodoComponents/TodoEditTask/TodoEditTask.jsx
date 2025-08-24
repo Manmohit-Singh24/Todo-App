@@ -1,4 +1,4 @@
-import { useState, useId, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import TodoCheckBox from "../TodoCheckBox/TodoCheckBox";
 import "./TodoEditTask.css";
 import Icon from "../../../utils/Icons";
@@ -13,8 +13,8 @@ import { setEditingTaskId } from "../../../store/Features/TodoSlice";
 
 const TodoEditTask = ({ id }) => {
     const dispatch = useDispatch();
-    const todo = useSelector((state) => state.TodoData.Todos[id]);
-
+    const todo = useSelector((state) => state.TodoData.Todos[id]);    
+    
     const [dueDate, setDueDate] = useState(todo.dueDate);
     const [expandedDatePicker, setExpandedDatePicker] = useState(false);
     const [dateIconColor, setDateIconColor] = useState("var(--Disabled)");
@@ -27,7 +27,7 @@ const TodoEditTask = ({ id }) => {
     const [taskValue, setTaskValue] = useState(todo.task);
     const [descriptionValue, setDescriptionValue] = useState(todo.description);
     const taskRef = useRef(null);
-    const descriptionRef = useRef(null);
+    const descriptionRef = useRef(null);    
 
     const [editingTask, setEditingTask] = useState(false);
 
@@ -139,6 +139,9 @@ const TodoEditTask = ({ id }) => {
 
     let todoPath = [];
 
+    console.log(todo);
+    
+
     let rootParentSectionId = todo.sectionId;
     useSelector((state) => {
         for (let pid = todo.parentTodoId; pid; ) {
@@ -164,9 +167,14 @@ const TodoEditTask = ({ id }) => {
             }
         }
     });
-    const rootParentTag = useSelector(
-        (state) => state.TodoData.Tags[state.TodoData.Sections[rootParentSectionId]?.tagId].title,
-    );
+
+    let [rootParentTag, rootParentTagColor] = useSelector((state) => [
+        state.TodoData.Tags[state.TodoData.Sections[rootParentSectionId]?.tagId]?.title,
+        state.TodoData.Tags[state.TodoData.Sections[rootParentSectionId]?.tagId]?.tagColor ,
+    ]);
+
+    rootParentTagColor = rootParentTagColor ==="default" ? "var(--Disabled)" : rootParentTagColor;
+    
     const rootParentSectionName = useSelector(
         (state) => state.TodoData.Sections[rootParentSectionId]?.sectionName,
     );
@@ -226,10 +234,14 @@ const TodoEditTask = ({ id }) => {
                 <button type="button" className="TodoEditTaskCloseButton" onClick={closeWindow}>
                     <Icon name={"IconCross"} size="XS" />
                 </button>
+
                 <div className="TodoEditTaskHeader">
-                    <button type="button" className="TodoEditTaskTagButton">
+                    <button type="button" className="TodoEditTaskTagButton" style={{ "--tagColor": rootParentTagColor }}>
                         <Icon name={"IconTag"} size="XS" />
-                        <span>{rootParentTag}</span>/<span>{rootParentSectionName}</span>
+                        <span>{rootParentTag}</span>
+                        /
+                        <Icon name={"IconAddSection"} size="XS" />
+                        <span>{rootParentSectionName}</span>
                     </button>
 
                     <div className="TodoEditTaskPathContainer">{todoPath}</div>
@@ -256,7 +268,7 @@ const TodoEditTask = ({ id }) => {
                                 ref={taskRef}
                                 onChange={(e) => handleOnChange({ e })}
                                 readOnly={!editingTask}
-                                defaultValue={taskValue}
+                                value={taskValue}
                             />
                             <textarea
                                 className="TodoEditTaskDescription"
@@ -265,7 +277,7 @@ const TodoEditTask = ({ id }) => {
                                 ref={descriptionRef}
                                 onChange={(e) => handleOnChange({ e })}
                                 readOnly={!editingTask}
-                                defaultValue={descriptionValue}
+                                value={descriptionValue}
                             />
 
                             {editingTask && (
