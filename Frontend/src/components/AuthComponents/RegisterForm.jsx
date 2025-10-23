@@ -24,7 +24,7 @@ const RegisterForm = () => {
             await authService.googleLogin();
         if (isAuthenticated) {
             dispatch(setAuthData({ Email: data.email, Name: data.name }));
-            navigate("/");
+            navigate("/app/todos/inbox");
         } else {
             setErrorsMessage(message);
         }

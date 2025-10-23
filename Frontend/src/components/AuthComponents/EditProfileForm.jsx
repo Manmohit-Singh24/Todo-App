@@ -21,7 +21,7 @@ const EditProfileForm = () => {
             data["file"] = fileUrl;
             dispatch(setAuthData({ Name: data.Name, ProfilePic: data.file }));
             console.log(data);
-            navigate("/");
+            navigate("/app/todos/inbox");
         } else {
             setErrorsMessage(message);
         }

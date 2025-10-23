@@ -18,7 +18,7 @@
     font : var(--Text-1) ;
 
     background-color: var(--bg);
-    color: var(--Primary-Bg);
+    color: var(--Secondary-BG);
     
     cursor: pointer;
     transition: all 0.25s;

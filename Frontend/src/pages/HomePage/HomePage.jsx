@@ -8,7 +8,7 @@ const HomePage = () => {
 
     return (
         <>
-            <IconsDisplayAll />
+            {/* <IconsDisplayAll /> */}
 
             <div className="HomePageContainer">
                 <h1>Welcome to the Todo App</h1>
@@ -18,23 +18,6 @@ const HomePage = () => {
                     onClick={() => {
                         navigate("/auth/login");
                     }}
-                    className={"HomePageButton"}
-                ></Button>
-
-                <Button
-                    text="Todos"
-                    onClick={() => {
-                        navigate("/app/todo/today");
-                    }}
-                    className={"HomePageButton"}
-                ></Button>
-
-                <Button
-                    text="Notes"
-                    onClick={() => {
-                        navigate("/app/notes/");
-                    }}
-                    className={"HomePageButton"}
                 ></Button>
             </div>
         </>
